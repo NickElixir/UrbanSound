@@ -5,7 +5,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('audiolyzer/', include('audiolyzer.urls')),
+    path('', include('poster.urls')),
 ]
 
 if settings.DEBUG:
