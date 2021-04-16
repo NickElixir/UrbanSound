@@ -49,22 +49,17 @@ def process_prediction():
         input_shape=(DIMENSION_OF_PIC,DIMENSION_OF_PIC,3),
         classes=10
     )
-
-    model.compile(optimizers.RMSprop(lr=0.00001, decay=1e-6),loss="categorical_crossentropy",metrics=["accuracy"])
-    model = models.load_model(PATH_TO_WEIGHTS + WEIGHTS_FILENAME)
+    model.compile()
+    #model = models.load_model(PATH_TO_WEIGHTS + 'model.h5', compile=True)
+    model.load_weights(PATH_TO_WEIGHTS + WEIGHTS_FILENAME)
     Data_dir = np.array(glob('media/*'))
-
     for file in Data_dir[len(Data_dir) - 1:]:
         print(file)
         filename,name = file,file.split('/')[-1].split('.')[0]
         create_spectrogram(filename,name)
-
-    #Data_dir = np.array(glob('../spectros/*'))
-    #print(os.getcwd())
-
-    img = image.load_img('../spectros/tmp.jpg', target_size=(DIMENSION_OF_PIC,DIMENSION_OF_PIC))
+    img = image.load_img('../spectros/tmp.jpg', target_size=(DIMENSION_OF_PIC,DIMENSION_OF_PIC,3))
     img = np.expand_dims(img, axis=0)
-    result = model.predict(img)
+    result = model.predict(img/255)
     predicted_class_indices=np.argmax(result, axis=1)
     prediction_holder = ['air conditioner',
                          'car horn',
