@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from matplotlib import figure
 import gc
 from path import Path
-import soundfile
+import soundfile as sf
 from keras.layers import Dense, Activation, Flatten, Dropout, BatchNormalization, Conv2D, MaxPooling2D, GlobalAveragePooling2D
 from keras.layers.advanced_activations import LeakyReLU
 from keras.models import Sequential, Model
@@ -22,6 +22,7 @@ from keras import models
 from keras.optimizers import Adam
 from keras.preprocessing.image import ImageDataGenerator
 from keras.preprocessing import image
+import shutil
 
 DIMENSION_OF_PIC = 200
 PATH_TO_WEIGHTS = '/home/nippon/DL/'
@@ -37,7 +38,7 @@ def create_spectrogram(filename,name):
     ax.set_frame_on(False)
     S = librosa.feature.melspectrogram(y=clip, sr=sample_rate)
     librosa.display.specshow(librosa.power_to_db(S, ref=np.max))
-    filename  = 'spectros/' + 'tmp' + '.jpg'
+    filename  = '../spectros/' + 'tmp' + '.jpg'
     plt.savefig(filename, dpi=3000, bbox_inches='tight',pad_inches=0)
 
 def process_prediction():
@@ -48,15 +49,20 @@ def process_prediction():
         input_shape=(DIMENSION_OF_PIC,DIMENSION_OF_PIC,3),
         classes=10
     )
+
     model.compile(optimizers.RMSprop(lr=0.00001, decay=1e-6),loss="categorical_crossentropy",metrics=["accuracy"])
     model = models.load_model(PATH_TO_WEIGHTS + WEIGHTS_FILENAME)
+    Data_dir = np.array(glob('media/*'))
 
-    Data_dir = np.array(glob('wavs/*'))
     for file in Data_dir[len(Data_dir) - 1:]:
+        print(file)
         filename,name = file,file.split('/')[-1].split('.')[0]
         create_spectrogram(filename,name)
-    Data_dir = np.array(glob('spectros/*'))
-    img = image.load_img(Data_dir[0], target_size=(DIMENSION_OF_PIC,DIMENSION_OF_PIC))
+
+    #Data_dir = np.array(glob('../spectros/*'))
+    #print(os.getcwd())
+
+    img = image.load_img('../spectros/tmp.jpg', target_size=(DIMENSION_OF_PIC,DIMENSION_OF_PIC))
     img = np.expand_dims(img, axis=0)
     result = model.predict(img)
     predicted_class_indices=np.argmax(result, axis=1)
@@ -71,6 +77,8 @@ def process_prediction():
                          'siren',
                          'street music']
     print(prediction_holder[int(predicted_class_indices)])
-
-    return int(predicted_class_indices)
-process_prediction()
+    shutil.rmtree('media')
+    os.mkdir('media')
+    #shutil.rmtree('../spectros')
+    #os.mkdir('../spectros')
+    return prediction_holder[int(predicted_class_indices)]

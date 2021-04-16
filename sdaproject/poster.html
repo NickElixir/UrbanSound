@@ -3,5 +3,6 @@
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}
   {{ form.as_p }}
-  <button type="submit">Submit The Post</button>
+  <button type="submit">Submit New Post</button>
+  <p> text below the button </p>
 </form>
