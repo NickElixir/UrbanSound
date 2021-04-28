@@ -24,7 +24,9 @@ class MakePostView(CreateView):
 def printer(request):
     data = dict()
     pred = resnet_model_proc.process_prediction()
+        
     data = {
-        'prediction' : pred
+        'prediction' : pred,
     }
-    return render(request, '../templates/home.html', data)
+
+    return render(request, '../templates/pred.html', data)
