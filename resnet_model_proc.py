@@ -7,6 +7,11 @@ import keras.backend as K
 import librosa
 import librosa.display
 import pylab
+
+import matplotlib
+matplotlib.use('Agg')
+#used on Mac OS
+
 import matplotlib.pyplot as plt
 from matplotlib import figure
 import gc
@@ -17,6 +22,7 @@ from keras.layers.advanced_activations import LeakyReLU
 from keras.models import Sequential, Model
 from keras import regularizers, optimizers
 from keras import applications
+from keras.applications.resnet50 import ResNet50
 from keras import layers
 from keras import models
 from keras.optimizers import Adam
@@ -25,8 +31,9 @@ from keras.preprocessing import image
 import shutil
 
 DIMENSION_OF_PIC = 200
-PATH_TO_WEIGHTS = '/home/nippon/DL/'
-WEIGHTS_FILENAME = 'pretrained-weights-resnet10_mono_2021-03-11_23-07-36.h5'
+#PATH_TO_WEIGHTS = os.path.abspath(os.path.dirname(__file__))
+PATH_TO_WEIGHTS = "/home/nippon/DL/"
+WEIGHTS_FILENAME = '/pretrained-weights-resnet10_mono_2021-03-11_23-07-36.h5'
 
 def create_spectrogram(filename,name):
     plt.interactive(False)
@@ -42,7 +49,7 @@ def create_spectrogram(filename,name):
     plt.savefig(filename, dpi=3000, bbox_inches='tight',pad_inches=0)
 
 def process_prediction():
-    model = applications.ResNet50(
+    model = ResNet50(
         include_top=True,
         weights=None,
         input_tensor=None,
