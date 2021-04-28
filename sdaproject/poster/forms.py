@@ -5,4 +5,5 @@ class PosterForm(forms.ModelForm):
 
     class Meta:
         model = Poster
-        fields = ['title', 'file']
+        #fields = ['title', 'file']
+        fields = ['file']

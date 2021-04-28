@@ -31,7 +31,8 @@ from keras.preprocessing import image
 import shutil
 
 DIMENSION_OF_PIC = 200
-PATH_TO_WEIGHTS = os.path.abspath(os.path.dirname(__file__))
+#PATH_TO_WEIGHTS = os.path.abspath(os.path.dirname(__file__))
+PATH_TO_WEIGHTS = "/home/nippon/DL/"
 WEIGHTS_FILENAME = '/pretrained-weights-resnet10_mono_2021-03-11_23-07-36.h5'
 
 def create_spectrogram(filename,name):
